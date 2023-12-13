@@ -16,7 +16,13 @@ jobs:
           REPO_URL: ${{ secrets.REPO_URL }}
         run: fetch --repo="https://github.com/dyte-in/z-app-vite/" --release-asset=".*" --tag=">=0" /tmp/release
 
-      - uses: AButler/upload-release-assets@v3.0
-        with:
-          files: "/tmp/release/*.*"
-          repo-token: ${{ secrets.GH_TOKEN }}
+      - name: Create Release
+        run: |
+          # Get version from latest.json
+          VERSION=$(jq -r '.version' "/tmp/release/Latest.json")
+
+          gh release create "$VERSION" ./tmp/release/* \
+            --title "Release $VERSION" \
+            --draft=false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
