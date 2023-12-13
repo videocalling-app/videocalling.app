@@ -12,19 +12,22 @@ jobs:
 
       - name: Install fetch
         run: brew install fetch
+      
+      - name: Create tmp folder
+        run: mkdir $TMPDIR/tauri_release
 
       - name: Fetch latest release
         env:
           GITHUB_OAUTH_TOKEN: ${{ secrets.GH_TOKEN }}
           REPO_URL: ${{ secrets.REPO_URL }}
-        run: fetch --repo="$REPO_URL" --release-asset=".*" --tag=">=0" $TMPDIR
+        run: fetch --repo="$REPO_URL" --release-asset=".*" --tag=">=0" $TMPDIR/tauri_release
 
       - name: Create Release
         run: |
           # Get version from latest.json
-          VERSION=$(jq -r '.version' "$TMPDIR/Latest.json")
+          VERSION=$(jq -r '.version' "$TMPDIR/tauri_releaseLatest.json")
 
-          gh release create "$VERSION" $TMPDIR/* \
+          gh release create "$VERSION" $TMPDIR/tauri_release/* \
             --title "Release $VERSION" \
             --draft=false
         env:
