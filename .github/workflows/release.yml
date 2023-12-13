@@ -1,0 +1,22 @@
+name: Release
+
+on:
+  repository_dispatch
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install fetch
+        run: brew install fetch
+      
+      - name: Fetch latest release
+        env:
+          GITHUB_OAUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+          REPO_URL: ${{ secrets.REPO_URL }}
+        run: fetch --repo="https://github.com/dyte-in/z-app-vite/" --release-asset=".*" --tag=">=0" /tmp/release
+
+      - uses: AButler/upload-release-assets@v3.0
+        with:
+          files: "/tmp/release/*.*"
+          repo-token: ${{ secrets.GH_TOKEN }}
