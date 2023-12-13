@@ -9,19 +9,19 @@ jobs:
     steps:
       - name: Install fetch
         run: brew install fetch
-      
+
       - name: Fetch latest release
         env:
           GITHUB_OAUTH_TOKEN: ${{ secrets.GH_TOKEN }}
           REPO_URL: ${{ secrets.REPO_URL }}
-        run: fetch --repo="https://github.com/dyte-in/z-app-vite/" --release-asset=".*" --tag=">=0" /tmp/release
+        run: fetch --repo="$REPO_URL" --release-asset=".*" --tag=">=0" $TMPDIR
 
       - name: Create Release
         run: |
           # Get version from latest.json
-          VERSION=$(jq -r '.version' "/tmp/release/Latest.json")
+          VERSION=$(jq -r '.version' "$TMPDIR/Latest.json")
 
-          gh release create "$VERSION" ./tmp/release/* \
+          gh release create "$VERSION" $TMPDIR/* \
             --title "Release $VERSION" \
             --draft=false
         env:
