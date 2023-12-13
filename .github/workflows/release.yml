@@ -25,7 +25,7 @@ jobs:
       - name: Create Release
         run: |
           # Get version from latest.json
-          VERSION=$(jq -r '.version' "$TMPDIR/tauri_releaseLatest.json")
+          VERSION=$(jq -r '.version' "$TMPDIR/tauri_release/Latest.json")
 
           gh release create "$VERSION" $TMPDIR/tauri_release/* \
             --title "Release $VERSION" \
