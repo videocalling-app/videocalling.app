@@ -20,7 +20,7 @@ jobs:
         env:
           GITHUB_OAUTH_TOKEN: ${{ secrets.GH_TOKEN }}
           REPO_URL: ${{ secrets.REPO_URL }}
-        run: fetch --repo="$REPO_URL" --release-asset=".*" --tag=">=0" $TMPDIR/tauri_release
+        run: fetch --repo="$REPO_URL" --release-asset="([Vv]ideo[.-][cC]alling[.-]*)|(latest.json)" --tag=">=0" $TMPDIR/tauri_release
 
       - name: Create Release
         run: |
